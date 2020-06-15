@@ -16,7 +16,7 @@ Acesse a página de versões [clicando aqui](https://github.com/gabriel193/tcc/r
 * [Retrofit](https://square.github.io/retrofit/) - Framework para consumo de webservice.
 * [ENCOG](https://www.heatonresearch.com/encog/) - Framework para redes neurais.
 * [Chip Navigation Bar](https://github.com/ismaeldivita/chip-navigation-bar) - Menu utilizado no layout.
-* [Gson](https://github.com/google/gson) - Biblioteca Java que pode ser usada para converter objetos Java em sua representação JSON.
+* [Gson](https://github.com/google/gson) - Biblioteca Java que foi usada para converter objetos Java em sua representação JSON.
 
 ## Licença
 
