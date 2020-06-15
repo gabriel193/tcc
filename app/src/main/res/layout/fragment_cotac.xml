@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".tela_Cota">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/titulo-cota"
+        android:layout_above="@id/dolar_compra"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:text="Cotações Atuais"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/branco"/>
+
+    <TextView
+        android:id="@+id/dolar_compra"
+        android:layout_above="@id/cotacao_compra"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="26sp"
+        android:text="@string/compra" />
+
+    <TextView
+        android:id="@+id/cotacao_compra"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/dolar_venda"
+        android:layout_below="@id/cotacao_compra"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="26sp"
+        android:text="@string/venda" />
+
+    <TextView
+        android:id="@+id/cotacao_venda"
+        android:layout_below="@id/dolar_venda"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
+
+</RelativeLayout>

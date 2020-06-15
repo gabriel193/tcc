@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".tela_Conv">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/titulo-conv"
+        android:layout_above="@id/edit_Real"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:text="Conversão"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/branco"/>
+
+    <EditText
+        android:id="@+id/edit_Real"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:hint="@string/valor_em_real"
+        android:gravity="center_horizontal"
+        android:textSize="15sp"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/dolar"
+        android:layout_below="@id/converter"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/converter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Converter!"
+        android:layout_below="@id/edit_Real"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/branco"/>
+
+</RelativeLayout>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Dólar Agora</string>
+    <string name="venda">Venda</string>
+    <string name="compra">Compra</string>
+    <string name="converter_button">Converter</string>
+    <string name="valor_em_real">Insira o valor em Real</string>
+</resources>
