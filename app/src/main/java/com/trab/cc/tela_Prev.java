@@ -32,10 +32,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
+import java.util.Date;
 
 /**
         * Subclasse responsável por calcular a previsão.
@@ -54,7 +58,7 @@ public class tela_Prev extends Fragment {
         StrictMode.setThreadPolicy(policy); //Permite que as webrequests sejam feitas de forma síncrona.
         try { //Pequeno try catch para que caso a URL seja inválida, o app não dê uma exceção.
             previsao_Func();
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | ParseException e) {
             e.printStackTrace();
         }
     }
@@ -69,16 +73,25 @@ public class tela_Prev extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public File downloadData(String[] args) throws MalformedURLException {
+    public File downloadData(String[] args) throws MalformedURLException, ParseException {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        dateFormat.format(date);
         LocalDate data_inicio = LocalDate.now().minusDays(10); //Data atual -10 dias.
         LocalDate data_fim = LocalDate.now(); //Data atual.
         DayOfWeek dia = DayOfWeek.of(data_fim.get(ChronoField.DAY_OF_WEEK));
-        switch (dia) { //Tratamento para o último dia de fechamento da moeda seja sempre um dia útil, caso contrário a requisição volta em branco.
-            case SATURDAY:
-                data_fim = LocalDate.now().minusDays(1);
-            case SUNDAY:
-                data_fim = LocalDate.now().minusDays(2);
+
+        //Tratamento para a data_fim da request, visto que a API lança os valores somente em dias úteis e após as 12:59.
+        if (dia.equals(DayOfWeek.SATURDAY)) {
+                data_fim = LocalDate.now().minusDays(1); //Caso sábado, extrato de sexta.
+        }else if(dia.equals(DayOfWeek.SUNDAY)){
+                data_fim = LocalDate.now().minusDays(2); //Caso domingo, extrato de sexta.
+        }else if (dateFormat.parse(dateFormat.format(date)).before(dateFormat.parse("12:59")) && dia.equals(DayOfWeek.MONDAY)){
+                data_fim = LocalDate.now().minusDays(3); //Caso segunda e antes de 12:59, extrato de sexta.
+        }else if (dateFormat.parse(dateFormat.format(date)).before(dateFormat.parse("12:59"))){
+                data_fim = LocalDate.now().minusDays(1); //Caso antes de 12:59, extrato do dia anterior.
         }
+
         DateTimeFormatter data_format = DateTimeFormatter.ofPattern("dd-MM-YYYY"); //Formatação para adequar à request da API.
         String inicio = data_inicio.format(data_format); //String para compor a previsão_URL como parâmetro.
         String fim = data_fim.format(data_format); //String para compor a previsão_URL como parâmetro.
@@ -94,7 +107,7 @@ public class tela_Prev extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void previsao_Func() throws MalformedURLException {
+    public void previsao_Func() throws MalformedURLException, ParseException {
         ErrorCalculation.setMode(ErrorCalculationMode.RMS); //Seleciona o método de erro (rms = root mean square error)
         String[] args = new String[0]; //Define o arquivo com os dados de entrada.
         File filename = downloadData(args); //Especifica o nome do arquivo.
