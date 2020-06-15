@@ -1,5 +1,6 @@
 package com.trab.cc;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -40,6 +41,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.util.Date;
+import java.util.Objects;
 
 /**
         * Subclasse responsável por calcular a previsão.
@@ -75,7 +77,7 @@ public class tela_Prev extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public File downloadData(String[] args) throws MalformedURLException, ParseException {
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         dateFormat.format(date);
         LocalDate data_inicio = LocalDate.now().minusDays(10); //Data atual -10 dias.
         LocalDate data_fim = LocalDate.now(); //Data atual.
@@ -86,9 +88,9 @@ public class tela_Prev extends Fragment {
                 data_fim = LocalDate.now().minusDays(1); //Caso sábado, extrato de sexta.
         }else if(dia.equals(DayOfWeek.SUNDAY)){
                 data_fim = LocalDate.now().minusDays(2); //Caso domingo, extrato de sexta.
-        }else if (dateFormat.parse(dateFormat.format(date)).before(dateFormat.parse("12:59")) && dia.equals(DayOfWeek.MONDAY)){
+        }else if (Objects.requireNonNull(dateFormat.parse(dateFormat.format(date))).before(dateFormat.parse("12:59")) && dia.equals(DayOfWeek.MONDAY)){
                 data_fim = LocalDate.now().minusDays(3); //Caso segunda e antes de 12:59, extrato de sexta.
-        }else if (dateFormat.parse(dateFormat.format(date)).before(dateFormat.parse("12:59"))){
+        }else if (Objects.requireNonNull(dateFormat.parse(dateFormat.format(date))).before(dateFormat.parse("12:59"))){
                 data_fim = LocalDate.now().minusDays(1); //Caso antes de 12:59, extrato do dia anterior.
         }
 
