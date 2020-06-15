@@ -88,9 +88,9 @@ public class tela_Prev extends Fragment {
                 data_fim = LocalDate.now().minusDays(1); //Caso sábado, extrato de sexta.
         }else if(dia.equals(DayOfWeek.SUNDAY)){
                 data_fim = LocalDate.now().minusDays(2); //Caso domingo, extrato de sexta.
-        }else if (Objects.requireNonNull(dateFormat.parse(dateFormat.format(date))).before(dateFormat.parse("12:59")) && dia.equals(DayOfWeek.MONDAY)){
+        }else if (Objects.requireNonNull(dateFormat.parse(dateFormat.format(date))).before(dateFormat.parse("14:01")) && dia.equals(DayOfWeek.MONDAY)){
                 data_fim = LocalDate.now().minusDays(3); //Caso segunda e antes de 12:59, extrato de sexta.
-        }else if (Objects.requireNonNull(dateFormat.parse(dateFormat.format(date))).before(dateFormat.parse("12:59"))){
+        }else if (Objects.requireNonNull(dateFormat.parse(dateFormat.format(date))).before(dateFormat.parse("14:01"))){
                 data_fim = LocalDate.now().minusDays(1); //Caso antes de 12:59, extrato do dia anterior.
         }
 
