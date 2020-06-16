@@ -1,6 +1,5 @@
 package com.trab.cc;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -29,19 +28,12 @@ import org.encog.util.csv.CSVFormat;
 import org.encog.util.csv.ReadCSV;
 
 import java.io.File;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-import java.util.Date;
-import java.util.Objects;
 
 /**
         * Subclasse responsável por calcular a previsão.
@@ -60,7 +52,7 @@ public class tela_Prev extends Fragment {
         StrictMode.setThreadPolicy(policy); //Permite que as webrequests sejam feitas de forma síncrona.
         try { //Pequeno try catch para que caso a URL seja inválida, o app não dê uma exceção.
             previsao_Func();
-        } catch (MalformedURLException | ParseException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -75,29 +67,11 @@ public class tela_Prev extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public File downloadData(String[] args) throws MalformedURLException, ParseException {
-        Date date = new Date();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        dateFormat.format(date);
-        LocalDate data_inicio = LocalDate.now().minusDays(10); //Data atual -10 dias.
-        LocalDate data_fim = LocalDate.now(); //Data atual.
-        DayOfWeek dia = DayOfWeek.of(data_fim.get(ChronoField.DAY_OF_WEEK));
-
-        //Tratamento para a data_fim da request, visto que a API lança os valores somente em dias úteis e após as 12:59.
-        if (dia.equals(DayOfWeek.SATURDAY)) {
-                data_fim = LocalDate.now().minusDays(1); //Caso sábado, extrato de sexta.
-        }else if(dia.equals(DayOfWeek.SUNDAY)){
-                data_fim = LocalDate.now().minusDays(2); //Caso domingo, extrato de sexta.
-        }else if (dia.equals(DayOfWeek.MONDAY)){
-                data_fim = LocalDate.now().minusDays(3); //Caso segunda, extrato de sexta.
-        }else if (Objects.requireNonNull(dateFormat.parse(dateFormat.format(date))).before(dateFormat.parse("14:01"))){
-                data_fim = LocalDate.now().minusDays(1); //Caso antes de 12:59, extrato do dia anterior.
-        }
-
-        DateTimeFormatter data_format = DateTimeFormatter.ofPattern("dd-MM-YYYY"); //Formatação para adequar à request da API.
-        String inicio = data_inicio.format(data_format); //String para compor a previsão_URL como parâmetro.
-        String fim = data_fim.format(data_format); //String para compor a previsão_URL como parâmetro.
-        String previsao_URL = "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?@dataInicial='" + inicio + "'&@dataFinalCotacao='" + fim + "'&$top=100&$format=text/csv&$select=cotacaoCompra";
+    public File downloadData(String[] args) throws IOException {
+        LocalDate data_fim = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-YYYY"); //Formatação para adequar à request da API.
+        String data_final = formatter.format(data_fim);
+        String previsao_URL = "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?@dataInicial='01-01-2020'&@dataFinalCotacao='" + data_final + "'&$top=30&$orderby=dataHoraCotacao%20desc&$format=text/csv&$select=cotacaoCompra";
         if (args.length != 0) {
             local_Temp = args[0];
         } else {
@@ -109,11 +83,11 @@ public class tela_Prev extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void previsao_Func() throws MalformedURLException, ParseException {
+    public void previsao_Func() throws IOException {
         ErrorCalculation.setMode(ErrorCalculationMode.RMS); //Seleciona o método de erro (rms = root mean square error)
         String[] args = new String[0]; //Define o arquivo com os dados de entrada.
         File filename = downloadData(args); //Especifica o nome do arquivo.
-        CSVFormat format = new CSVFormat(',', ' '); //Especifica o separador de valores dentro do CSV.
+        CSVFormat format = new CSVFormat(',', ' ');  //Especifica o separador de valores dentro do CSV.
         VersatileDataSource source = new CSVDataSource(filename, true, format); //Mapeia o arquivo de entrada em um "VersatileDatasource"
         VersatileMLDataSet data = new VersatileMLDataSet(source);
         data.getNormHelper().setFormat(format); //Inicializa o ajudante de normalização.
@@ -130,13 +104,13 @@ public class tela_Prev extends Fragment {
         model.selectTrainingType(data);//Seleciona o tipo de treinamento de acordo com o modelo.
         //Faz o treinamento dos dados com validação cruzada de 3 dobras.
         //Retorna o melhor método encontrado, no caso será BasicNetwork
+
         MLRegression bestMethod = (MLRegression) model.crossvalidate(3, false);
         NormalizationHelper helper = data.getNormHelper(); //Inicia os parâmetros de normalização.
         ReadCSV csv = new ReadCSV(filename, true, format); //Formata e lê como csv.
         String[] line = new String[1]; //  Vetor de entrada (Somente a cotação)
         double[] slice = new double[1]; // Vetor de saída (Somente UM double)
         MLData input = helper.allocateInputVector(5); //Pegas as últimas 5 cotações do arquivo.
-        String saida = ""; //Processa a regressão.
         while (csv.next()) { //Lê as próximas linhas do arquivo csv.
             line[0] = csv.get(0); //Pega a cotação do dólar no registro do csv.
             helper.normalizeInputVector(line, slice, false); //Normaliza a entrada.
