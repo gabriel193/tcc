@@ -1,15 +1,10 @@
 # Dólar Agora
 
-Um protótipo que tem por objetivo monitorar e prever a variação da cotação do dólar, com a finalidade de auxiliar turistas, viajantes
-e pessoas interessadas no mercado de câmbio.
-
-## Pré-requisitos
-
-Celular com sistema operacional Android.
+Um protótipo que tem como objetivo monitorar e prever o valor da cotação de compra e venda do dólar, com a finalidade de auxiliar turistas, viajantes e pessoas interessadas no mercado de câmbio.
 
 ### Instalação
 
-Acesse a página de versões [clicando aqui](https://github.com/gabriel193/tcc/releases) e baixe o arquivo .apk mais recente em seu celular, ou compile diretamente em um emulador pelo código fonte.
+Acesse a página de versões [clicando aqui](https://github.com/gabriel193/tcc/releases) e baixe o arquivo .apk mais recente em seu celular, ou compile diretamente em um emulador versão 29 do Android.
 
 ### Construído com
 

@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //Define o layout principal como activity_main.xml
-
         bottomNav = findViewById(R.id.bottom_nav); //Referencia a navegação dos botões.
 
         if (savedInstanceState == null) { //Essa checagem basicamente faz com que o app sempre inicie na tela inicial.
@@ -27,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
             fragmentManager = getSupportFragmentManager();
             tela_Cota telaCota = new tela_Cota();
             fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, telaCota)
-                    .commit();
+                    .replace(R.id.fragment_container, telaCota) //Substitui o fragmento da visualização pela tela de cotação.
+                    .commit(); //Salva.
         }
 
         bottomNav.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() { //Cria o listener de cliques nos botões.
@@ -43,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new tela_Conv(); //Página com a conversão.
                         break;
                     case R.id.prev:
-                        fragment = new tela_Prev(); //Páginma com a previsão
+                        fragment = new tela_Prev(); //Página com a previsão
                         break;
                 }
 
-                if (fragment != null) {
+                if (fragment != null) { //Caso algum botão seja apertado, pega o valor setado para o fragment e seta como a tela.
                     fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
                             .replace(R.id.fragment_container, fragment)

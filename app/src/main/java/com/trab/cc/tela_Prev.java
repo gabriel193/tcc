@@ -36,8 +36,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
-        * Subclasse responsável por calcular a previsão.
-        * Esta classe é chamada na MainActivity.
+ * Subclasse responsável por calcular a previsão.
+ * Esta classe é chamada na MainActivity.
  */
 
 public class tela_Prev extends Fragment {
@@ -102,9 +102,9 @@ public class tela_Prev extends Fragment {
         data.setLagWindowSize(3);//Especificações da série de dados.
         model.holdBackValidation(0.3, false, 1001); //Define os dados para validação final (30% da base, sem embaralhar, semente fixa).
         model.selectTrainingType(data);//Seleciona o tipo de treinamento de acordo com o modelo.
+
         //Faz o treinamento dos dados com validação cruzada de 3 dobras.
         //Retorna o melhor método encontrado, no caso será BasicNetwork
-
         MLRegression bestMethod = (MLRegression) model.crossvalidate(3, false);
         NormalizationHelper helper = data.getNormHelper(); //Inicia os parâmetros de normalização.
         ReadCSV csv = new ReadCSV(filename, true, format); //Formata e lê como csv.
